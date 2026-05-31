@@ -444,37 +444,19 @@ Example dashboard panels:
 
 ## Voice Conversation Interface
 
-```text
-assets/voice_interface.png
-```
-
-```markdown
 ![Voice Interface](assets/voice_interface.png)
-```
 
 ---
 
 ## Prometheus Metrics
 
-```text
-assets/prometheus_dashboard.png
-```
-
-```markdown
 ![Prometheus](assets/prometheus_dashboard.png)
-```
 
 ---
 
 ## Grafana Dashboard
 
-```text
-assets/grafana_dashboard.png
-```
-
-```markdown
 ![Grafana Dashboard](assets/grafana_dashboard.png)
-```
 
 ---
 
