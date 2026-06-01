@@ -460,6 +460,11 @@ Example dashboard panels:
 
 ---
 
+## Worker
+![Worker](assets/worker.png)
+
+---
+
 # Production Engineering Highlights
 
 This project demonstrates:
