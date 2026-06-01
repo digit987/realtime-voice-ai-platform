@@ -62,10 +62,13 @@ async def websocket_chat(
 
             REQUEST_COUNT.inc()
 
-            publish_user_message(
-                session_id,
-                user_message
-            )
+            try:
+                publish_user_message(
+                    session_id,
+                    user_message
+                )
+            except Exception:
+                pass
 
             selected_agent = (
                 route_message(
