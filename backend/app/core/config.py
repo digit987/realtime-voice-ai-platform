@@ -6,13 +6,21 @@ load_dotenv()
 
 class Settings:
 
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    OPENAI_API_KEY = os.getenv(
+        "OPENAI_API_KEY"
+    )
 
-    DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
+    REDIS_HOST = os.getenv(
+        "REDIS_HOST",
+        "localhost"
+    )
 
-    REDIS_HOST = os.getenv("REDIS_HOST")
-
-    REDIS_PORT = int(os.getenv("REDIS_PORT"))
+    REDIS_PORT = int(
+        os.getenv(
+            "REDIS_PORT",
+            "6379"
+        )
+    )
 
 
 settings = Settings()

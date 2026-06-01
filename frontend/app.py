@@ -1,27 +1,32 @@
-import streamlit as st
+import os
+import json
+import uuid
 
 import requests
+import streamlit as st
 import websocket
-import uuid
-import json
 
 from streamlit_mic_recorder import (
     mic_recorder
 )
 
 
-BACKEND_URL = "http://127.0.0.1:8000"
+BACKEND_URL = os.getenv(
+    "BACKEND_URL",
+    "http://127.0.0.1:8000"
+)
 
 
 st.set_page_config(
-    page_title="Realtime Voice AI Platform"
+    page_title="Realtime Voice AI Platform",
+    layout="wide"
 )
 
 
 if "session_id" not in st.session_state:
 
-    st.session_state.session_id = (
-        str(uuid.uuid4())
+    st.session_state.session_id = str(
+        uuid.uuid4()
     )
 
 
@@ -58,94 +63,122 @@ audio = mic_recorder(
 
 if audio:
 
-    transcription_response = requests.post(
-        f"{BACKEND_URL}/api/transcribe",
+    try:
 
-        files={
-            "audio": (
-                "audio.wav",
-                audio["bytes"],
-                "audio/wav"
+        transcription_response = (
+            requests.post(
+                f"{BACKEND_URL}/api/transcribe",
+
+                files={
+                    "audio": (
+                        "audio.wav",
+                        audio["bytes"],
+                        "audio/wav"
+                    )
+                },
+
+                timeout=120
             )
-        }
-    )
-
-    transcript = (
-        transcription_response
-        .json()["transcript"]
-    )
-
-    st.session_state.messages.append(
-        {
-            "role": "user",
-            "content": transcript
-        }
-    )
-
-    with st.chat_message(
-        "user"
-    ):
-
-        st.markdown(
-            transcript
         )
 
-    ws = websocket.create_connection(
-        "ws://127.0.0.1:8000/ws/chat"
-    )
-
-    payload = {
-        "session_id":
-            st.session_state.session_id,
-
-        "message":
-            transcript
-    }
-
-    ws.send(
-        json.dumps(
-            payload
-        )
-    )
-
-    assistant_placeholder = (
-        st.empty()
-    )
-
-    full_response = ""
-
-    while True:
-
-        chunk = ws.recv()
-
-        if chunk == "[END]":
-
-            break
-
-        full_response += chunk
-
-        assistant_placeholder.markdown(
-            full_response
+        transcript = (
+            transcription_response
+            .json()
+            ["transcript"]
         )
 
-    ws.close()
+        st.session_state.messages.append(
+            {
+                "role": "user",
+                "content": transcript
+            }
+        )
 
-    st.session_state.messages.append(
-        {
-            "role": "assistant",
-            "content": full_response
+        with st.chat_message(
+            "user"
+        ):
+
+            st.markdown(
+                transcript
+            )
+
+        ws_url = (
+            BACKEND_URL
+            .replace(
+                "https://",
+                "wss://"
+            )
+            .replace(
+                "http://",
+                "ws://"
+            )
+        )
+
+        ws = websocket.create_connection(
+            f"{ws_url}/ws/chat"
+        )
+
+        payload = {
+
+            "session_id":
+                st.session_state.session_id,
+
+            "message":
+                transcript
         }
-    )
 
-    speech_response = requests.post(
-        f"{BACKEND_URL}/api/speak",
+        ws.send(
+            json.dumps(
+                payload
+            )
+        )
 
-        json={
-            "text": full_response
-        }
-    )
+        full_response = ""
 
-    st.audio(
-        speech_response.content,
-        format="audio/mp3"
-    )
+        assistant_placeholder = (
+            st.empty()
+        )
+
+        while True:
+
+            chunk = ws.recv()
+
+            if chunk == "[END]":
+
+                break
+
+            full_response += chunk
+
+            assistant_placeholder.markdown(
+                full_response
+            )
+
+        ws.close()
+
+        st.session_state.messages.append(
+            {
+                "role": "assistant",
+                "content": full_response
+            }
+        )
+
+        speech_response = requests.post(
+            f"{BACKEND_URL}/api/speak",
+
+            json={
+                "text": full_response
+            },
+
+            timeout=120
+        )
+
+        st.audio(
+            speech_response.content,
+            format="audio/mp3"
+        )
+
+    except Exception as e:
+
+        st.error(
+            f"Error: {str(e)}"
+        )
