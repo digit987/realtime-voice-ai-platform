@@ -13,6 +13,16 @@ Production-style realtime conversational AI platform supporting streaming speech
 
 ---
 
+## Live Demo
+
+Frontend: https://realtime-voice-ai-platform.streamlit.app/
+
+Backend API: https://realtime-voice-ai-platform.onrender.com/docs
+
+Deployed on Render.
+
+---
+
 # Overview
 
 This project implements an enterprise-style realtime Voice AI platform capable of:
