@@ -11,9 +11,12 @@ from streamlit_mic_recorder import (
 )
 
 
-BACKEND_URL = os.getenv(
+BACKEND_URL = st.secrets.get(
     "BACKEND_URL",
-    "http://127.0.0.1:8000"
+    os.getenv(
+        "BACKEND_URL",
+        "http://127.0.0.1:8000"
+    )
 )
 
 
