@@ -10,16 +10,25 @@ redis_client = redis.Redis(
     decode_responses=True
 )
 
+def get_history(session_id):
 
-def get_history(session_id: str):
+    try:
 
-    data = redis_client.get(session_id)
+        data = redis_client.get(
+            session_id
+        )
 
-    if not data:
+        if not data:
+
+            return []
+
+        return json.loads(
+            data
+        )
+
+    except Exception:
 
         return []
-
-    return json.loads(data)
 
 
 def add_message(
@@ -28,18 +37,24 @@ def add_message(
     content: str
 ):
 
-    history = get_history(
-        session_id
-    )
+    try:
 
-    history.append(
-        {
-            "role": role,
-            "content": content
-        }
-    )
+        history = get_history(
+            session_id
+        )
 
-    redis_client.set(
-        session_id,
-        json.dumps(history)
-    )
+        history.append(
+            {
+                "role": role,
+                "content": content
+            }
+        )
+
+        redis_client.set(
+            session_id,
+            json.dumps(history)
+        )
+
+    except Exception:
+
+        pass
