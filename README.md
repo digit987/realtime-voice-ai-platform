@@ -9,7 +9,7 @@
 ![Prometheus](https://img.shields.io/badge/Prometheus-Monitoring-yellow)
 ![Grafana](https://img.shields.io/badge/Grafana-Dashboards-orange)
 
-Production-style realtime conversational AI platform supporting streaming speech-to-text, multi-agent orchestration, Redis-backed event processing, session-aware memory, WebSocket communication, OpenAI TTS, and observability through Prometheus and Grafana.
+Enterprise realtime conversational AI platform supporting streaming speech-to-text, multi-agent orchestration, Redis-backed event processing, session-aware memory, WebSocket communication, OpenAI TTS, and observability through Prometheus and Grafana.
 
 ---
 
