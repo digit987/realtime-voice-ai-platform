@@ -55,16 +55,12 @@ WebSocket Layer
      │
      ▼
 Routing Agent
- ┌────┼────┐
- ▼    ▼    ▼
-Conversation
-Agent
-
-Calculator
-Agent
-
-Knowledge
-Agent
+     │
+     ├────────► Conversation Agent
+     │
+     ├────────► Calculator Agent
+     │
+     └────────► Knowledge Agent
      │
      ▼
 Redis Memory
